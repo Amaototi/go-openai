@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"os"
 
-	"github.com/sashabaranov/go-openai"
+	"github.com/Amaototi/go-openai"
 )
 
 func main() {
@@ -16,8 +16,13 @@ func main() {
 		Model: openai.GPT3Dot5Turbo,
 		Messages: []openai.ChatCompletionMessage{
 			{
-				Role:    openai.ChatMessageRoleSystem,
-				Content: "you are a helpful chatbot",
+				Role: openai.ChatMessageRoleSystem,
+				Content: []openai.Content{
+					openai.TextContent{
+						Type: openai.ChatMessageContentTypeText,
+						Text: "you are a helpful chatbot",
+					},
+				},
 			},
 		},
 	}
@@ -27,8 +32,13 @@ func main() {
 	s := bufio.NewScanner(os.Stdin)
 	for s.Scan() {
 		req.Messages = append(req.Messages, openai.ChatCompletionMessage{
-			Role:    openai.ChatMessageRoleUser,
-			Content: s.Text(),
+			Role: openai.ChatMessageRoleUser,
+			Content: []openai.Content{
+				openai.TextContent{
+					Type: openai.ChatMessageContentTypeText,
+					Text: s.Text(),
+				},
+			},
 		})
 		resp, err := client.CreateChatCompletion(context.Background(), req)
 		if err != nil {

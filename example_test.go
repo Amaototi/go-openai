@@ -11,7 +11,7 @@ import (
 	"net/url"
 	"os"
 
-	"github.com/sashabaranov/go-openai"
+	"github.com/Amaototi/go-openai"
 )
 
 func Example() {
@@ -22,8 +22,13 @@ func Example() {
 			Model: openai.GPT3Dot5Turbo,
 			Messages: []openai.ChatCompletionMessage{
 				{
-					Role:    openai.ChatMessageRoleUser,
-					Content: "Hello!",
+					Role: openai.ChatMessageRoleUser,
+					Content: []openai.Content{
+						openai.TextContent{
+							Type: openai.ChatMessageContentTypeText,
+							Text: "Hello!",
+						},
+					},
 				},
 			},
 		},
@@ -46,8 +51,13 @@ func ExampleClient_CreateChatCompletionStream() {
 			MaxTokens: 20,
 			Messages: []openai.ChatCompletionMessage{
 				{
-					Role:    openai.ChatMessageRoleUser,
-					Content: "Lorem ipsum",
+					Role: openai.ChatMessageRoleUser,
+					Content: []openai.Content{
+						openai.TextContent{
+							Type: openai.ChatMessageContentTypeText,
+							Text: "Lorem ipsum",
+						},
+					},
 				},
 			},
 			Stream: true,
@@ -276,8 +286,13 @@ func Example_chatbot() {
 		Model: openai.GPT3Dot5Turbo,
 		Messages: []openai.ChatCompletionMessage{
 			{
-				Role:    openai.ChatMessageRoleSystem,
-				Content: "you are a helpful chatbot",
+				Role: openai.ChatMessageRoleSystem,
+				Content: []openai.Content{
+					openai.TextContent{
+						Type: openai.ChatMessageContentTypeText,
+						Text: "you are a helpful chatbot",
+					},
+				},
 			},
 		},
 	}
@@ -287,8 +302,13 @@ func Example_chatbot() {
 	s := bufio.NewScanner(os.Stdin)
 	for s.Scan() {
 		req.Messages = append(req.Messages, openai.ChatCompletionMessage{
-			Role:    openai.ChatMessageRoleUser,
-			Content: s.Text(),
+			Role: openai.ChatMessageRoleUser,
+			Content: []openai.Content{
+				openai.TextContent{
+					Type: openai.ChatMessageContentTypeText,
+					Text: s.Text(),
+				},
+			},
 		})
 		resp, err := client.CreateChatCompletion(context.Background(), req)
 		if err != nil {
@@ -312,8 +332,13 @@ func ExampleDefaultAzureConfig() {
 			Model: openai.GPT3Dot5Turbo,
 			Messages: []openai.ChatCompletionMessage{
 				{
-					Role:    openai.ChatMessageRoleUser,
-					Content: "Hello Azure OpenAI!",
+					Role: openai.ChatMessageRoleUser,
+					Content: []openai.Content{
+						openai.TextContent{
+							Type: openai.ChatMessageContentTypeText,
+							Text: "Hello Azure OpenAI!",
+						},
+					},
 				},
 			},
 		},

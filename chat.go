@@ -13,6 +13,9 @@ const (
 	ChatMessageRoleAssistant = "assistant"
 	ChatMessageRoleFunction  = "function"
 	ChatMessageRoleTool      = "tool"
+
+	ChatMessageContentTypeText      = "text"
+	ChatMessageContentTypeImage_url = "image_url"
 )
 
 const chatCompletionsSuffix = "/chat/completions"
@@ -52,8 +55,8 @@ type PromptAnnotation struct {
 }
 
 type ChatCompletionMessage struct {
-	Role    string `json:"role"`
-	Content string `json:"content"`
+	Role    string    `json:"role"`
+	Content []Content `json:"content"`
 
 	// This property isn't in the official documentation, but it's in
 	// the documentation for the official library for python:
@@ -68,6 +71,23 @@ type ChatCompletionMessage struct {
 
 	// For Role=tool prompts this should be set to the ID given in the assistant's prior request to call a tool.
 	ToolCallID string `json:"tool_call_id,omitempty"`
+}
+
+type Content interface{}
+
+type TextContent struct {
+	Type string `json:"type"`
+	Text string `json:"text"`
+}
+
+type ImageContent struct {
+	Type     string   `json:"type,omitempty"`
+	ImageURL ImageURL `json:"image_url,omitempty"`
+}
+
+type ImageURL struct {
+	Url    string `json:"url"`
+	Detail string `json:"detail"`
 }
 
 type ToolCall struct {

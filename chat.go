@@ -211,6 +211,23 @@ type ChatCompletionResponseFormatJSONSchema struct {
 	Strict      bool           `json:"strict"`
 }
 
+type ChatCompletionWebSearchOptionsUserLocationApproximate struct {
+	Country  string `json:"country,omitempty"`
+	City     string `json:"city,omitempty"`
+	Region   string `json:"region,omitempty"`
+	Timezone string `json:"timezone,omitempty"`
+}
+
+type ChatCompletionWebSearchOptionsUserLocation struct {
+	Type        string                                                `json:"type"`
+	Approximate ChatCompletionWebSearchOptionsUserLocationApproximate `json:"approximate"`
+}
+
+type ChatCompletionWebSearchOptions struct {
+	UserLocatoion     ChatCompletionWebSearchOptionsUserLocation `json:"user_location,omitempty"`
+	SerachContextSize string                                     `json:"search_context_size,omitempty"`
+}
+
 // ChatCompletionRequest represents a request structure for chat completion API.
 type ChatCompletionRequest struct {
 	Model    string                  `json:"model"`
@@ -263,6 +280,8 @@ type ChatCompletionRequest struct {
 	ReasoningEffort string `json:"reasoning_effort,omitempty"`
 	// Metadata to store with the completion.
 	Metadata map[string]string `json:"metadata,omitempty"`
+	// WebSearchOptions is used to specify the web search options for the chat completion.
+	WebSearchOptions ChatCompletionWebSearchOptions `json:"web_search_options,omitempty"`
 }
 
 type StreamOptions struct {
@@ -348,6 +367,18 @@ func (r FinishReason) MarshalJSON() ([]byte, error) {
 	return []byte(`"` + string(r) + `"`), nil // best effort to not break future API changes
 }
 
+type URLCitation struct {
+	EndIndex   int    `json:"end_index"`
+	StartIndex int    `json:"start_index"`
+	Title      string `json:"title"`
+	URL        string `json:"url"`
+}
+
+type Annotations struct {
+	Type        string      `json:"type"`
+	URLCitation URLCitation `json:"url_citation"`
+}
+
 type ChatCompletionChoice struct {
 	Index   int                   `json:"index"`
 	Message ChatCompletionMessage `json:"message"`
@@ -361,6 +392,7 @@ type ChatCompletionChoice struct {
 	FinishReason         FinishReason         `json:"finish_reason"`
 	LogProbs             *LogProbs            `json:"logprobs,omitempty"`
 	ContentFilterResults ContentFilterResults `json:"content_filter_results,omitempty"`
+	Annotations          []Annotations        `json:"annotations,omitempty"`
 }
 
 // ChatCompletionResponse represents a response structure for chat completion API.
